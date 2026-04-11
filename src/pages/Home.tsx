@@ -10,7 +10,7 @@ const Home = () => {
       <HeroSection />
 
       {/* Comic list */}
-      <div className="px-4 py-6 flex flex-col gap-4">
+      <div className="px-md py-lg flex flex-col gap-md">
         {comicList.map((comic) => (
           <ComicCard key={comic.id} comic={comic} />
         ))}

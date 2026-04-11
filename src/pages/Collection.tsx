@@ -1,17 +1,103 @@
+import { Link } from "react-router-dom";
+
+interface CollectionTitle {
+  id: string;
+  name: string;
+  covers: { id: string; src: string; linkTo?: string }[];
+}
+
+const titles: CollectionTitle[] = [
+  {
+    id: "binary",
+    name: "BINARY",
+    covers: [
+      { id: "binary-01", src: "/images/2x3_cover_binary01@2x.png", linkTo: "/title/binary-01" },
+      { id: "binary-02", src: "" },
+      { id: "binary-03", src: "" },
+      { id: "binary-04", src: "" },
+    ],
+  },
+  {
+    id: "full-color",
+    name: "FULL COLOR",
+    covers: [
+      { id: "fc-01", src: "" },
+      { id: "fc-02", src: "" },
+      { id: "fc-03", src: "" },
+      { id: "fc-04", src: "" },
+    ],
+  },
+  {
+    id: "monument",
+    name: "MONUMENT",
+    covers: [
+      { id: "mon-01", src: "" },
+      { id: "mon-02", src: "" },
+      { id: "mon-03", src: "" },
+      { id: "mon-04", src: "" },
+    ],
+  },
+];
+
 const Collection = () => {
   return (
-    <div className="px-4 pt-12 pb-6">
-      <h1 className="text-2xl font-bold font-['Space_Grotesk'] mb-2">My Collection</h1>
-      <p className="text-sm text-gray-500 font-mono mb-8">
-        Comics you've saved or purchased will appear here.
-      </p>
-
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-16 h-16 text-gray-300 mb-4">
-          <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-        <p className="text-gray-400 font-mono text-sm">Nothing here yet</p>
+    <div className="pt-4 pb-lg">
+      {/* Top nav bar */}
+      <div className="flex items-center gap-3 px-md mb-6">
+        <button className="text-gray-900">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-7 h-7">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <img
+          src="/images/logo_left.svg"
+          alt="ASTRA"
+          className="h-[28px] w-auto"
+        />
       </div>
+
+      {/* Title sections */}
+      {titles.map((title) => (
+        <section key={title.id} className="mb-8">
+          {/* Section heading with green dashed underline */}
+          <div className="px-md mb-4">
+            <h2 className="font-condensed text-h4 font-bold text-gray-900 tracking-wide">
+              {title.name}
+            </h2>
+            <div
+              className="mt-1 h-0 border-t-2 border-dashed border-green-400"
+              style={{ width: "120px" }}
+            />
+          </div>
+
+          {/* Horizontal scrolling covers */}
+          <div className="flex gap-3 px-md overflow-x-auto no-scrollbar">
+            {title.covers.map((cover) => {
+              const inner = (
+                <div
+                  className="flex-shrink-0 w-[130px] aspect-[2/3] rounded-md overflow-hidden bg-gray-200"
+                >
+                  {cover.src ? (
+                    <img
+                      src={cover.src}
+                      alt={cover.id}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : null}
+                </div>
+              );
+
+              return cover.linkTo ? (
+                <Link key={cover.id} to={cover.linkTo}>
+                  {inner}
+                </Link>
+              ) : (
+                <div key={cover.id}>{inner}</div>
+              );
+            })}
+          </div>
+        </section>
+      ))}
     </div>
   );
 };

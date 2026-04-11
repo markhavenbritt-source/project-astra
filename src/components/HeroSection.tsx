@@ -15,34 +15,37 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Hamburger menu */}
-        <button className="absolute top-4 left-4 text-white z-10">
+        <button className="absolute top-7 left-4 text-white z-10">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-8 h-8">
             <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
-        {/* Logo */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+        {/* Astra Logo + Subhead */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
           <img
-            src="/images/logo_astra.svg"
+            src="/images/logo_center.svg"
             alt="ASTRA"
-            className="h-16 w-auto brightness-0 invert"
+            className="h-[60px] w-auto brightness-0 invert"
           />
+          <span className="font-mono text-[14px] font-bold tracking-[0.2em] text-white -mt-2.5 whitespace-nowrap text-center">
+            COMICS / STORIES / WORLDS
+          </span>
         </div>
 
         {/* Featured comic info */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <span className="inline-block bg-black/80 text-white text-[10px] font-bold tracking-widest px-3 py-1.5 mb-3 font-mono">
+          <span className="inline-block bg-black/80 text-white text-caption-2 font-mono font-bold tracking-widest px-3 py-1.5 mb-3">
             {featuredComic.genre}
           </span>
-          <h2 className="text-3xl font-bold leading-tight font-['Space_Grotesk']">
+          <h2 className="font-display text-h2 leading-tight text-white">
             {featuredComic.description}
           </h2>
         </div>
       </div>
 
-      {/* Yellow accent bar */}
-      <div className="h-2 bg-[var(--accent-yellow)]" />
+      {/* Yellow accent bar — brand yellow */}
+      <div className="h-2 bg-yellow-500" />
     </section>
   );
 };

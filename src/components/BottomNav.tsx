@@ -48,9 +48,9 @@ const BottomNav = () => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 text-[10px] font-bold tracking-wide transition-colors ${
+              `flex flex-col items-center gap-0.5 font-sans text-caption-2 font-bold tracking-wide transition-colors ${
                 isActive
-                  ? "text-[var(--accent-green)]"
+                  ? "text-green-800"
                   : "text-gray-400 hover:text-gray-600"
               }`
             }
@@ -60,7 +60,7 @@ const BottomNav = () => {
                 {item.icon}
                 <span>{item.label}</span>
                 {isActive && (
-                  <div className="w-8 h-1 bg-[var(--accent-green)] rounded-full mt-0.5" />
+                  <div className="w-8 h-1 bg-green-800 rounded-full mt-0.5" />
                 )}
               </>
             )}

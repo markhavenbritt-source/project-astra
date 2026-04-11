@@ -2,24 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --bg-app: #f5f0e8;
-    --bg-card: #ede8df;
-    --text-primary: #1a1a1a;
-    --text-secondary: #666;
-    --accent-green: #4a8c3f;
-    --accent-yellow: #f5c518;
-  }
+/* Google Fonts: Roboto, Roboto Mono, Roboto Condensed */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
 
+@layer base {
   * {
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    font-family: 'Space Mono', monospace;
-    background: var(--bg-app);
-    color: var(--text-primary);
+    font-family: 'Roboto', sans-serif;
+    background: #f5f0e8;
+    color: #1a202c;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior: none;
   }
