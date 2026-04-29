@@ -22,6 +22,9 @@ const ComicCard = ({ comic }: ComicCardProps) => {
         <p className="font-sans leading-relaxed text-gray-700" style={{ fontSize: '13px' }}>
           {comic.description}
         </p>
+        <span className="font-sans font-bold italic uppercase text-gray-500" style={{ fontSize: '16px' }}>
+          Coming soon
+        </span>
       </div>
     </div>
   );
