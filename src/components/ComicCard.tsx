@@ -6,7 +6,7 @@ interface ComicCardProps {
 
 const ComicCard = ({ comic }: ComicCardProps) => {
   return (
-    <div className="bg-surface-card rounded-lg overflow-hidden flex gap-4 p-4 cursor-pointer hover:bg-surface-card-hover transition-colors">
+    <div className="bg-white rounded-lg overflow-hidden flex gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors border border-gray-400">
       {/* Cover image */}
       <img
         src={comic.cover}
@@ -16,10 +16,10 @@ const ComicCard = ({ comic }: ComicCardProps) => {
 
       {/* Info */}
       <div className="flex flex-col justify-center gap-2 min-w-0">
-        <span className="inline-block self-start text-caption-2 font-mono font-bold tracking-widest px-3 py-1 rounded-full border border-gray-300 bg-white">
+        <span className="font-mono text-caption-2 font-bold tracking-widest text-gray-900">
           {comic.genre}
         </span>
-        <p className="font-sans text-body-2 leading-relaxed text-gray-600">
+        <p className="font-sans leading-relaxed text-gray-700" style={{ fontSize: '13px' }}>
           {comic.description}
         </p>
       </div>
