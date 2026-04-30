@@ -42,18 +42,15 @@ const titles: CollectionTitle[] = [
 const Collection = () => {
   return (
     <div className="pt-4 pb-lg">
-      {/* Top nav bar */}
-      <div className="flex items-center gap-3 px-md mb-6">
-        <button className="text-gray-900">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-7 h-7">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <img
-          src="/images/logo_left.svg"
-          alt="ASTRA"
-          className="h-[28px] w-auto"
-        />
+      {/* Mobile-only top header — desktop uses the global DesktopNav in Layout */}
+      <div className="lg:hidden flex items-center px-md mb-6">
+        <Link to="/" aria-label="Astra home">
+          <img
+            src="/images/logo_left.svg"
+            alt="ASTRA"
+            className="h-[28px] w-auto"
+          />
+        </Link>
       </div>
 
       {/* Title sections */}

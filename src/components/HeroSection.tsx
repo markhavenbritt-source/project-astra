@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { featuredComic } from "../data/comics";
-import HamburgerMenu from "./HamburgerMenu";
 
 const navIcons = [
   {
@@ -81,11 +80,6 @@ const HeroSection = () => {
 
         {/* Gradient overlay — brand yellow, extends higher on desktop to sit under headline */}
         <div className="absolute inset-x-0 bottom-0 h-1/3 lg:h-[300px] bg-gradient-to-t from-[#FFC301]/90 to-transparent" />
-
-        {/* Mobile hamburger */}
-        <div className="lg:hidden">
-          <HamburgerMenu color="text-white" />
-        </div>
 
         {/* Mobile centered logo */}
         <div className="lg:hidden absolute top-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">

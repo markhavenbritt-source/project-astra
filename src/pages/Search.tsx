@@ -1,9 +1,21 @@
+import { Link } from "react-router-dom";
 import ComicCard from "../components/ComicCard";
 import { comics } from "../data/comics";
 
 const Search = () => {
   return (
-    <div className="px-md pt-12 pb-lg">
+    <div className="px-md pt-4 pb-lg">
+      {/* Mobile-only top header — desktop uses the global DesktopNav in Layout */}
+      <div className="lg:hidden flex items-center mb-6">
+        <Link to="/" aria-label="Astra home">
+          <img
+            src="/images/logo_left.svg"
+            alt="ASTRA"
+            className="h-[28px] w-auto"
+          />
+        </Link>
+      </div>
+
       <h1 className="font-sans text-h3 mb-md">Search</h1>
 
       {/* Search input */}

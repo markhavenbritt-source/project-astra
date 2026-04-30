@@ -1,5 +1,4 @@
 import { useState } from "react";
-import HamburgerMenu from "../components/HamburgerMenu";
 
 const previewPages = Array.from({ length: 6 }, (_, i) => i);
 
@@ -10,8 +9,6 @@ const BinaryDetail = () => {
 
   return (
     <div className="min-h-screen bg-white relative">
-      <HamburgerMenu />
-
       {/* Hero image — square, grey placeholder */}
       <div className="w-full aspect-square bg-gray-300" />
 
