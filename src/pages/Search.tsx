@@ -26,7 +26,7 @@ const Search = () => {
         <input
           type="text"
           placeholder="Search comics, genres, creators..."
-          className="w-full bg-surface-card rounded-lg pl-10 pr-4 py-3 font-sans text-body-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-800 focus:ring-opacity-50"
+          className="w-full bg-white border border-black rounded-lg pl-10 pr-4 py-3 font-sans text-body-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-800 focus:ring-opacity-50"
         />
       </div>
 

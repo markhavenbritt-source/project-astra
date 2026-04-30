@@ -7,6 +7,7 @@ import Cart from "./pages/Cart";
 import TitleDetail from "./pages/TitleDetail";
 import Reader from "./pages/Reader";
 import BinaryDetail from "./pages/BinaryDetail";
+import Preview from "./pages/Preview";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -21,6 +22,7 @@ const App = () => (
         <Route path="/comic/binary" element={<BinaryDetail />} />
       </Route>
       <Route path="/read/:id" element={<Reader />} />
+      <Route path="/preview" element={<Preview />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>

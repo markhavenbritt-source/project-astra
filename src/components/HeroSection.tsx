@@ -63,8 +63,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Hero image — links to BINARY detail */}
-      <Link to="/comic/binary" className="relative block h-[480px] lg:h-[560px]">
+      {/* Hero image — links to BINARY #01 read/issue page */}
+      <Link to="/title/binary-01" className="relative block h-[480px] lg:h-[560px]">
         {/* Mobile image */}
         <img
           src="/images/hero_0318.png"
