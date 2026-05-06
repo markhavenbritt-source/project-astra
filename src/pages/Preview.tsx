@@ -1,34 +1,90 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import html2canvas from "html2canvas";
 
 interface FrameDef {
   label: string;
   path: string;
+  filename: string;
 }
 
 const frames: FrameDef[] = [
-  { label: "Home", path: "/" },
-  { label: "Collection", path: "/collection" },
-  { label: "Search", path: "/search" },
-  { label: "Cart", path: "/cart" },
-  { label: "Binary detail", path: "/comic/binary" },
+  { label: "Home", path: "/", filename: "astra-home.png" },
+  { label: "Collection", path: "/collection", filename: "astra-collection.png" },
+  { label: "Search", path: "/search", filename: "astra-search.png" },
+  { label: "Cart", path: "/cart", filename: "astra-cart.png" },
+  { label: "Binary detail", path: "/comic/binary", filename: "astra-binary.png" },
 ];
 
 const DEVICE_WIDTH = 390;
 const DEVICE_HEIGHT = 844;
 
+const downloadCanvas = (canvas: HTMLCanvasElement, filename: string) => {
+  return new Promise<void>((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) return resolve();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      resolve();
+    }, "image/png");
+  });
+};
+
 const Preview = () => {
   const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+
+  const captureOne = async (frame: FrameDef) => {
+    const iframe = iframeRefs.current[frame.path];
+    const doc = iframe?.contentDocument;
+    if (!iframe || !doc?.body) return;
+    setBusy(frame.path);
+    try {
+      const canvas = await html2canvas(doc.body, {
+        width: DEVICE_WIDTH,
+        height: DEVICE_HEIGHT,
+        windowWidth: DEVICE_WIDTH,
+        windowHeight: DEVICE_HEIGHT,
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+      });
+      await downloadCanvas(canvas, frame.filename);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const captureAll = async () => {
+    for (const frame of frames) {
+      await captureOne(frame);
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-[1600px] mx-auto">
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Phone preview</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            All key routes rendered at iPhone 14 width ({DEVICE_WIDTH}×{DEVICE_HEIGHT}). Use your OS
-            screenshot tool ({navigator.platform.includes("Mac") ? "Cmd+Shift+4" : "PrtScn"}) on any
-            frame, or drag-select the frame.
-          </p>
+        <header className="mb-6 flex items-start justify-between gap-6 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Phone preview</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              All key routes rendered at iPhone 14 width ({DEVICE_WIDTH}×{DEVICE_HEIGHT}). Click
+              "Download" on any frame, or "Download all" for the full set.
+            </p>
+          </div>
+          <button
+            onClick={captureAll}
+            disabled={!!busy}
+            className="bg-gray-900 text-white text-sm font-mono uppercase tracking-widest px-5 py-3 rounded-md hover:bg-gray-700 transition-colors disabled:opacity-50"
+          >
+            {busy ? "Capturing…" : "Download all"}
+          </button>
         </header>
 
         <div className="flex gap-6 overflow-x-auto pb-6">
@@ -63,23 +119,29 @@ const Preview = () => {
                   }}
                 />
               </div>
-              <a
-                href={frame.path}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 text-xs text-blue-600 hover:underline"
-              >
-                Open standalone ↗
-              </a>
+              <div className="mt-3 flex items-center gap-3 text-xs">
+                <button
+                  onClick={() => captureOne(frame)}
+                  disabled={!!busy}
+                  className="bg-gray-900 text-white font-mono uppercase tracking-widest px-3 py-1.5 rounded hover:bg-gray-700 transition-colors disabled:opacity-50"
+                >
+                  {busy === frame.path ? "…" : "Download"}
+                </button>
+                <a
+                  href={frame.path}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Open ↗
+                </a>
+              </div>
             </figure>
           ))}
         </div>
 
         <footer className="mt-10 text-xs text-gray-500">
-          Tip: in Chrome DevTools, press{" "}
-          <kbd className="px-1.5 py-0.5 bg-gray-200 rounded">Cmd+Shift+M</kbd> to toggle device mode
-          and pick "iPhone 14" for an interactive emulator with built-in screenshot capture (3-dot
-          menu → Capture screenshot).
+          Files download to your browser's default download location (usually ~/Downloads).
         </footer>
       </div>
     </div>
