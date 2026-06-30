@@ -1,5 +1,13 @@
+// REPLACES your existing src/pages/Reader.tsx
+// Change: the reader is now GATED. Before showing pages it checks that the
+// signed-in user actually owns this issue. If they don't (or aren't signed
+// in), they're bounced to the BINARY detail page instead of seeing the comic.
+// Everything about the reading experience itself is unchanged.
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useEntitlement } from "../lib/useEntitlement";
+import { readerToProduct } from "../lib/products";
 
 /**
  * Page manifest per title.
@@ -17,6 +25,10 @@ const Reader = () => {
   const navigate = useNavigate();
   const pages = id ? pageManifest[id] : undefined;
 
+  // Which product must the user own to read this id?
+  const product = id ? readerToProduct[id] : undefined;
+  const { owned, loading: accessLoading } = useEntitlement(product ?? "");
+
   const [showUI, setShowUI] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -26,9 +38,18 @@ const Reader = () => {
   const totalPages = pages?.length ?? 0;
   const progress = totalPages > 0 ? Math.round(((currentPage + 1) / totalPages) * 100) : 0;
 
+  // Access guard: if the check is done and they don't own it, send them
+  // to the detail page (where they can sign in / buy).
+  useEffect(() => {
+    if (!product) return;
+    if (!accessLoading && !owned) {
+      navigate("/comic/binary", { replace: true });
+    }
+  }, [accessLoading, owned, product, navigate]);
+
   // Track which page is in view
   useEffect(() => {
-    if (!pages) return;
+    if (!pages || !owned) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -47,7 +68,7 @@ const Reader = () => {
     });
 
     return () => observer.disconnect();
-  }, [pages]);
+  }, [pages, owned]);
 
   // Auto-hide UI after scroll
   const handleScroll = useCallback(() => {
@@ -61,10 +82,20 @@ const Reader = () => {
     setShowUI((prev) => !prev);
   }, []);
 
-  if (!pages) {
+  if (!pages || !product) {
     return (
       <div className="flex items-center justify-center h-screen bg-black text-white">
         <p className="font-mono text-caption-1">Comic not found.</p>
+      </div>
+    );
+  }
+
+  // While we check ownership (or if not owned and about to redirect), show a
+  // simple black loading screen rather than flashing the comic.
+  if (accessLoading || !owned) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <p className="font-mono text-caption-1 animate-pulse">Loading…</p>
       </div>
     );
   }

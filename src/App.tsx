@@ -1,3 +1,6 @@
+// REPLACES your existing src/App.tsx
+// Only change: added the /owned route (the "you own it" page Stripe returns to).
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -8,6 +11,7 @@ import TitleDetail from "./pages/TitleDetail";
 import Reader from "./pages/Reader";
 import BinaryDetail from "./pages/BinaryDetail";
 import Preview from "./pages/Preview";
+import PurchaseSuccess from "./pages/PurchaseSuccess";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -23,6 +27,7 @@ const App = () => (
       </Route>
       <Route path="/read/:id" element={<Reader />} />
       <Route path="/preview" element={<Preview />} />
+      <Route path="/owned" element={<PurchaseSuccess />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>

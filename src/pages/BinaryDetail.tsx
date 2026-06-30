@@ -1,4 +1,11 @@
+// REPLACES your existing src/pages/BinaryDetail.tsx
+// Change vs. the last version: Buy goes STRAIGHT to Stripe (guest checkout),
+// no sign-in sheet first. Owners see READ NOW.
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEntitlement } from "../lib/useEntitlement";
+import { BINARY_ISSUE_1 } from "../lib/products";
 
 const previewPages = Array.from({ length: 6 }, (_, i) => i);
 
@@ -6,6 +13,40 @@ const summary = "BINARY is a sci-fi monster fight comic set in a post-war world 
 
 const BinaryDetail = () => {
   const [expanded, setExpanded] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
+
+  const { owned, loading: entLoading } = useEntitlement(BINARY_ISSUE_1);
+
+  const startCheckout = async () => {
+    setBusy(true);
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: BINARY_ISSUE_1 }),
+      });
+      if (!res.ok) throw new Error("checkout-failed");
+      const { url } = await res.json();
+      window.location.href = url; // off to Stripe
+    } catch {
+      setBusy(false);
+      alert("Sorry — couldn't start checkout. Please try again.");
+    }
+  };
+
+  const handleClick = () => {
+    if (owned) navigate("/read/binary-01");
+    else startCheckout();
+  };
+
+  const label = entLoading
+    ? "…"
+    : owned
+    ? "READ NOW"
+    : busy
+    ? "ONE SEC…"
+    : "BUY NOW";
 
   return (
     <div className="min-h-screen bg-white relative">
@@ -45,14 +86,28 @@ const BinaryDetail = () => {
           style={{ width: "180px" }}
         />
 
-        {/* Buy now + cart button */}
+        {/* Buy / Read button */}
         <div className="flex items-center gap-3 mb-5">
-          <button className="bg-green-400 hover:bg-green-500 text-gray-900 w-12 h-12 rounded-lg transition-colors flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
-              <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-            </svg>
+          <button
+            onClick={handleClick}
+            disabled={busy || entLoading}
+            className="bg-green-400 hover:bg-green-500 text-gray-900 w-12 h-12 rounded-lg transition-colors flex items-center justify-center disabled:opacity-60"
+            aria-label={label}
+          >
+            {owned ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 016.5 22H20v-5M4 19.5V5a2 2 0 012-2h12a2 2 0 012 2v12" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+              </svg>
+            )}
           </button>
-          <span className="font-display text-h4 text-gray-900">BUY NOW</span>
+          <span className="font-display text-h4 text-gray-900">{label}</span>
+          {!owned && !entLoading && (
+            <span className="font-display text-h4 text-gray-400">$5</span>
+          )}
         </div>
 
         {/* Preview pages — horizontal scroll, 2:3 ratio */}
